@@ -1,0 +1,10 @@
+{
+    "java.configuration.runtimes": [
+        {
+            "name": "JavaSE-17",
+            "path": "/usr/lib/jvm/jdk-17",
+            "default": true
+        }
+    ],
+    "java.configuration.updateBuildConfiguration": "automatic"
+}
