@@ -5,17 +5,25 @@ import java.util.List;
 
 public class BlockGroup {
 
-    private BlockGroupType type;
-    private List<Block> blocks = new ArrayList<>();
-
     private int x = 0;
     private int y = 0;
+
+    private BlockGroupType type;
+    private List<Block> blocks = new ArrayList<>();
 
     public BlockGroup(BlockGroupType type) {
         this.type = type;
         this.x = ((GameLogic.GRID_COLUMNS / 2) - (type.getWidth() / 2));
 
         blocks = makeBlocksFromType(type);
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 
     public BlockGroupType getType() {

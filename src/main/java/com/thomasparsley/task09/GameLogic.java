@@ -20,11 +20,15 @@ public class GameLogic extends Pane {
     public static final int WIDTH = GRID_COLUMNS * (GRID_BLOCK_SIZE + GRID_GAP);
     public static final int HEIGHT = GRID_ROWS * (GRID_BLOCK_SIZE + GRID_GAP);
 
+    private Timer fallingTimer = new Timer();
+    private FallingTask fallingTask = new FallingTask();
+
     private Block[][] grid;
     private BlockGroup activeBlockGroup;
     private List<BlockGroup> blockGroups = new ArrayList<>();
 
     private int score = 0;
+    private boolean gameOver = false;
 
     public GameLogic() {
         newActiveBlockGroup();
@@ -35,14 +39,25 @@ public class GameLogic extends Pane {
         updateGrid();
         updateMesh();
 
-        Timer fallingTimer = new Timer();
-        FallingTask fallingTask = new FallingTask();
-
         fallingTimer.schedule(fallingTask, 0, 500);
     }
 
     public int getScore() {
         return score;
+    }
+
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void newGame() {
+        score = 0;
+        gameOver = false;
+        blockGroups.clear();
+        newActiveBlockGroup();
+        
+        updateGrid();
+        updateMesh();
     }
 
     public BlockGroup getActiveBlockGroup() {
@@ -168,10 +183,20 @@ public class GameLogic extends Pane {
     }
 
     private void oneIteration() {
+        if (gameOver) {
+            return;
+        }
+
         updateGrid();
         var collision = collisionsCheck();
 
         if (collision) {
+            if (activeBlockGroup.getY() == 0) {
+                gameOver = true;
+                Tetris.updateUI();
+                return;
+            }
+
             newActiveBlockGroup();
         }
 
@@ -191,6 +216,10 @@ public class GameLogic extends Pane {
     }
 
     private void moveDown() {
+        if (gameOver) {
+            return;
+        }
+
         if (!activeBlockGroup.canMoveDown(grid)) {
             return;
         }
@@ -201,6 +230,10 @@ public class GameLogic extends Pane {
     }
 
     private void moveLeft() {
+        if (gameOver) {
+            return;
+        }
+
         if (!activeBlockGroup.canMoveLeft(grid)) {
             return;
         }
@@ -209,6 +242,10 @@ public class GameLogic extends Pane {
     }
 
     private void moveRight() {
+        if (gameOver) {
+            return;
+        }
+
         if (!activeBlockGroup.canMoveRight(grid)) {
             return;
         }
@@ -217,6 +254,10 @@ public class GameLogic extends Pane {
     }
 
     private void rotate() {
+        if (gameOver) {
+            return;
+        }
+
         if (!activeBlockGroup.canRotate(grid)) {
             return;
         }
